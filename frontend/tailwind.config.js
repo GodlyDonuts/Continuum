@@ -14,6 +14,7 @@ export default {
         cinnabar: '#E11D48',
         slate: '#475569',
         'optic-cyan': '#00E5FF',
+        'cinema-gold': '#D4AF37',
       },
       fontFamily: {
         sans: ['Geist Sans', 'Inter', 'sans-serif'],

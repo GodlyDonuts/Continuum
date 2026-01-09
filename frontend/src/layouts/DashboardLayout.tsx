@@ -20,8 +20,24 @@ const DashboardLayout = () => {
     const handleIngest = () => {
         setIsLive(true);
         setAnchors([
-            { id: '1', label: 'ELARA VANCE', index: 1, status: 'active' },
-            { id: '2', label: 'SUBJECT 04', index: 2, status: 'inactive' }
+            {
+                id: '0x1A4',
+                label: 'ELARA VANCE',
+                index: 1,
+                status: 'active',
+                thumbnail: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop', // Consistent with video
+                resemblance: 98.4,
+                physicalState: ['STATUS: NORMAL', 'ACC: SILVER_LOCKET']
+            },
+            {
+                id: '0x2B9',
+                label: 'SUBJECT 04',
+                index: 2,
+                status: 'inactive',
+                thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop',
+                resemblance: 92.1,
+                physicalState: ['STATUS: OBSCURED']
+            }
         ]);
     };
 

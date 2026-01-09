@@ -3,6 +3,9 @@ export interface Anchor {
     label: string;
     index: number;
     status: 'active' | 'inactive' | 'pending';
+    thumbnail?: string;
+    resemblance?: number;
+    physicalState?: string[];
 }
 
 export interface EnvState {

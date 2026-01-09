@@ -17,7 +17,7 @@
 
   /* Satin-Finish Glass */
   .glass-satin {
-    @apply bg-white/40 backdrop-blur-[30px] border-l border-white/50 shadow-sm;
+    @apply bg-white/40 backdrop-blur-[40px] border-l border-white/50 shadow-sm;
   }
 
   .text-gradient {
