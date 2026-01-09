@@ -10,6 +10,38 @@ The "Continuum" is a marathon creative agent that transforms a high-level concep
 
 ---
 
+## ⚡️ Getting Started
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- Gemini API Key
+
+### Backend
+The backend uses FastAPI and Python.
+
+1. **Setup:** (First time only)
+   ```bash
+   python3 -m venv backend/venv
+   source backend/venv/bin/activate
+   pip install -r backend/requirements.txt
+   ```
+
+2. **Run:**
+   ```bash
+   ./run_backend.sh
+   ```
+   Or manually: `source backend/venv/bin/activate && uvicorn backend.main:app --reload`
+
+3. **Configure:**
+   - Edit `.env` for API keys.
+   - Edit `backend/model_config.txt` to hotswap AI models.
+
+### Frontend
+(Instructions to be added)
+
+---
+
 ## 🚀 The Vision
 
 In the **Action Era**, creators shouldn't just prompt for a clip; they should direct a world. The Infinite Cinematographer solves the "AI Memory Gap"—the tendency for AI to forget character details or physical consequences between shots—by building a **Dynamic World Bible** within Gemini 3’s 1M+ token context window.
