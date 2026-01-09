@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Stage from '../components/Stage';
 import Timeline from '../components/Timeline';
@@ -7,16 +7,10 @@ import { RefactorAlert } from '../components/wow/RefactorAlert';
 
 const DashboardLayout = () => {
     // Demo state for Refactor Alert
-    const [refactorActive, setRefactorActive] = useState(false);
+    // const [refactorActive, setRefactorActive] = useState(false);
+    const [refactorActive] = useState(false);
 
-    useEffect(() => {
-        // Trigger the alert every 10 seconds for demo
-        const interval = setInterval(() => {
-            setRefactorActive(true);
-            setTimeout(() => setRefactorActive(false), 3000);
-        }, 10000);
-        return () => clearInterval(interval);
-    }, []);
+    // Demo interval removed per user request
 
     return (
         <div className="flex h-screen w-screen bg-gallery overflow-hidden text-gray-900 font-sans selection:bg-indigo/10 relative">
