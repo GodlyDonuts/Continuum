@@ -1,137 +1,77 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Sidebar from '../components/Sidebar';
-import Stage from '../components/Stage';
-import Timeline from '../components/Timeline';
-import Inspector from '../components/Inspector';
-
-import type { Anchor, Directive } from '../types';
+import StudioStage from '../components/StudioStage';
+import StudioDirector from '../components/StudioDirector';
+import type { Directive } from '../types';
 
 const DashboardLayout = () => {
-    // REAL App State
-    const [anchors, setAnchors] = useState<Anchor[]>([]);
-    const [directives, setDirectives] = useState<Directive[]>([]);
     const [isLive, setIsLive] = useState(false);
+    const [directives, setDirectives] = useState<Directive[]>([]);
 
-    // Wow Factors
-    const [activeTarget, setActiveTarget] = useState<{ x: number, y: number } | null>(null);
-
-    // Initial Data Injection (Simulating Ingest)
     const handleIngest = () => {
         setIsLive(true);
-        setAnchors([
-            {
-                id: '0x1A4',
-                label: 'ELARA VANCE',
-                index: 1,
-                status: 'active',
-                thumbnail: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop', // Consistent with video
-                resemblance: 98.4,
-                physicalState: ['STATUS: NORMAL', 'ACC: SILVER_LOCKET']
-            },
-            {
-                id: '0x2B9',
-                label: 'SUBJECT 04',
-                index: 2,
-                status: 'inactive',
-                thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop',
-                resemblance: 92.1,
-                physicalState: ['STATUS: OBSCURED']
-            }
-        ]);
+        // Add initial context/greeting from AI
+        setTimeout(() => {
+            setDirectives([
+                {
+                    id: 'init',
+                    type: 'ai',
+                    timestamp: new Date().toLocaleTimeString(),
+                    steps: [
+                        { id: '1', agent: 'GEMINI_3_PRO', action: 'Video ingested. Scene 01 ready for direction.', status: 'complete' }
+                    ]
+                }
+            ]);
+        }, 800);
     };
 
     const handleSendDirective = (text: string) => {
-        // 1. Add User Directive
-        const newDirective: Directive = {
+        // 1. Add User Message
+        const userMsg: Directive = {
             id: Date.now().toString(),
             type: 'user',
             content: text,
-            timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })
+            timestamp: new Date().toLocaleTimeString()
         };
-        setDirectives(prev => [...prev, newDirective]);
+        setDirectives(prev => [...prev, userMsg]);
 
-        // 2. Trigger "Agentic Connection"
-        setActiveTarget({ x: 50, y: 30 });
-
-        // 3. AI Response simulation (Multi-Agent Handoff)
+        // 2. Simulate AI Response (Simplified)
         setTimeout(() => {
-            const aiResponse: Directive = {
+            const aiMsg: Directive = {
                 id: (Date.now() + 1).toString(),
                 type: 'ai',
-                timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" }),
+                timestamp: new Date().toLocaleTimeString(),
                 steps: [
                     {
                         id: 's1',
                         agent: 'GEMINI_3_PRO',
-                        action: 'Reasoning: Analyzing facial topology for emotional variance...',
-                        status: 'complete',
-                        confidence: 0.98
+                        action: `Understood. Analyzing "${text}" for scene context...`,
+                        status: 'complete'
                     },
                     {
                         id: 's2',
                         agent: 'NANO_BANANA_PRO',
-                        action: 'Executing: Masking frame 142–180. Adjusting vector weights +0.42.',
-                        status: 'active',
-                        confidence: 0.85
+                        action: 'Adjusting scene parameters. Rendering update...',
+                        status: 'active'
                     }
                 ]
             };
-            setDirectives(prev => [...prev, aiResponse]);
-            setActiveTarget(null);
-        }, 1500);
+            setDirectives(prev => [...prev, aiMsg]);
+        }, 1000);
     };
 
     return (
-        <div className="flex h-screen w-screen bg-cardstock overflow-hidden text-charcoal font-sans selection:bg-orange/20 relative">
+        <div className="flex h-screen w-screen overflow-hidden bg-gallery-white font-sans text-black">
 
-            {/* 1. Left Sidebar (Fixed) */}
-            <Sidebar anchors={anchors} />
-
-            {/* 2. Middle Column (Stage + Timeline) */}
-            <div className="flex-1 flex flex-col relative z-0">
-                <Stage
-                    sceneTitle="SCENE 14: ALLEYWAY"
-                    isLive={isLive}
-                    onIngest={handleIngest}
-                />
-                <Timeline />
-
-                {/* Agentic Leader Line Overlay */}
-                <svg className="absolute inset-0 pointer-events-none z-50 overflow-visible">
-                    <AnimatePresence>
-                        {activeTarget && (
-                            <motion.path
-                                d={`M 100% 80% Q 90% 80% ${activeTarget.x}% ${activeTarget.y}%`}
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.5, ease: "circOut" }}
-                                stroke="#E11D48" // Cinnabar
-                                strokeWidth="2"
-                                fill="none"
-                                strokeDasharray="5,5"
-                            />
-                        )}
-                    </AnimatePresence>
-                    {activeTarget && (
-                        <motion.circle
-                            cx={`${activeTarget.x}%`}
-                            cy={`${activeTarget.y}%`}
-                            r="4"
-                            fill="#E11D48"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                        />
-                    )}
-                </svg>
+            {/* Left Pane: The Stage (50%) */}
+            <div className="w-1/2 h-full border-r border-gray-200">
+                <StudioStage isLive={isLive} onIngest={handleIngest} />
             </div>
 
-            {/* 3. Right Sidebar (Directives Hub) */}
-            <Inspector
-                directives={directives}
-                onSendDirective={handleSendDirective}
-            />
+            {/* Right Pane: The Director (50%) */}
+            <div className="w-1/2 h-full">
+                <StudioDirector directives={directives} onSend={handleSendDirective} />
+            </div>
+
         </div>
     );
 };

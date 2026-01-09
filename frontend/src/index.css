@@ -4,24 +4,24 @@
 
 @layer base {
   body {
-    @apply bg-cardstock text-charcoal font-sans antialiased;
+    @apply bg-gallery-white text-black font-sans antialiased overflow-hidden;
   }
 }
 
-@layer utilities {
+/* Custom Scrollbar for the Chat */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
 
-  /* Industrial "Panel" style - replacing glassmorphism */
-  .panel {
-    @apply bg-cardstock border border-charcoal/10 shadow-none;
-  }
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  /* Satin-Finish Glass */
-  .glass-satin {
-    @apply bg-white/40 backdrop-blur-[40px] border-l border-white/50 shadow-sm;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
 
-  .text-gradient {
-    /* Keeping text simple and sharp for industrial look, removed gradient */
-    @apply text-charcoal;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }
