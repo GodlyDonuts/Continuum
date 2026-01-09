@@ -1,88 +1,89 @@
-import { Activity } from 'lucide-react';
-import type { LogEntry, AgentStatus } from '../types';
+import { useRef, useEffect } from 'react';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import type { Directive } from '../types';
 
 interface InspectorProps {
-    logs?: LogEntry[];
-    agents?: AgentStatus[];
-    variance?: number; // 0 to 1
+    directives?: Directive[];
+    onSendDirective?: (text: string) => void;
 }
 
-const Inspector = ({ logs = [], agents = [], variance = 0 }: InspectorProps) => {
+const Inspector = ({ directives = [], onSendDirective }: InspectorProps) => {
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [directives]);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+            onSendDirective?.(e.currentTarget.value);
+            e.currentTarget.value = '';
+        }
+    };
+
     return (
-        <aside className="w-96 h-full bg-cardstock border-l border-charcoal/10 flex flex-col z-20 font-mono text-[11px] text-charcoal/80">
-            <div className="p-3 border-b border-charcoal/10 flex items-center justify-between bg-charcoal text-cardstock">
-                <h3 className="font-bold tracking-widest uppercase flex items-center gap-2">
-                    <Activity className="w-3 h-3 text-orange" />
-                    AUDIT_LOG
+        <aside className="w-96 h-full glass-satin border-l border-white/40 flex flex-col z-20 shadow-2xl relative">
+            <div className="p-4 border-b border-white/20 flex items-center justify-between">
+                <h3 className="font-sans font-bold tracking-widest uppercase text-charcoal/80 flex items-center gap-2 text-xs">
+                    <Sparkles className="w-3 h-3 text-cinnabar" />
+                    Directorial Log
                 </h3>
-                <span className={`px-1.5 py-0.5 font-bold text-[9px] rounded-sm ${variance > 0.1 ? 'bg-orange text-white' : 'bg-stone/20 text-stone'}`}>
-                    {variance > 0.1 ? 'VARIANCE_DETECTED' : 'OPTIMAL'}
+                <span className="px-1.5 py-0.5 font-bold text-[9px] bg-slate/10 text-slate rounded-sm uppercase tracking-wider">
+                    Collaboration Active
                 </span>
             </div>
 
-            <div className="flex-1 p-4 space-y-6 overflow-hidden">
-
-                {/* Active Agents Block */}
-                <div>
-                    <div className="text-[9px] font-bold text-stone uppercase mb-2 tracking-widest">Active Agents</div>
-                    <div className="flex flex-col gap-1">
-                        {agents.length === 0 ? (
-                            <div className="text-stone italic text-[10px] bg-charcoal/5 p-2 rounded-sm text-center">NO_AGENTS_ONLINE</div>
-                        ) : (
-                            agents.map(agent => (
-                                <div key={agent.id} className="flex justify-between border border-charcoal/10 p-2 bg-white rounded-sm">
-                                    <span className="font-bold">{agent.name}</span>
-                                    <span className={`font-bold ${agent.status === 'active' ? 'text-orange' : 'text-stone'}`}>{agent.status.toUpperCase()}</span>
-                                </div>
-                            ))
-                        )}
+            {/* Chat Area */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-6">
+                {directives.length === 0 ? (
+                    <div className="flex h-full flex-col items-center justify-center opacity-40 text-center">
+                        <div className="w-16 h-[1px] bg-charcoal/20 mb-4"></div>
+                        <p className="font-serif italic text-charcoal text-sm">"The screen is a canvas, <br />awaiting your directive."</p>
                     </div>
-                </div>
-
-                {/* Consistency Graph */}
-                <div>
-                    <div className="text-[9px] font-bold text-stone uppercase mb-2 tracking-widest">Continuum Variance</div>
-                    <div className="h-24 bg-white border border-charcoal/10 relative p-2 flex items-end justify-center">
-                        {variance === 0 ? (
-                            <div className="text-stone/30 text-[9px] text-center w-full self-center">
-                                NO_VARIANCE_DATA
+                ) : (
+                    directives.map((msg) => (
+                        <div key={msg.id} className={`flex flex-col ${msg.type === 'user' ? 'items-end' : 'items-start'}`}>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[9px] font-mono text-slate uppercase tracking-wider">
+                                    {msg.type === 'user' ? 'DIRECTIVE' : 'REFACTORING'}
+                                </span>
+                                <span className="text-[9px] font-mono text-slate/50">{msg.timestamp}</span>
                             </div>
-                        ) : (
-                            // Placeholder for dynamic SVG based on variance input
-                            <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
-                                <path d="M0,45 L100,45" stroke="#A1A1A1" strokeWidth="0.5" strokeDasharray="2 2" />
-                            </svg>
-                        )}
-                    </div>
-                </div>
 
-                {/* Live Logs */}
-                <div>
-                    <div className="text-[9px] font-bold text-stone uppercase mb-2 tracking-widest">System Output</div>
-                    <div className="space-y-2 border-l border-charcoal/20 pl-3">
-                        {logs.length === 0 ? (
-                            <div className="text-stone italic text-[10px]">AWAITING_LOG_STREAM...</div>
-                        ) : (
-                            logs.map(log => (
-                                <div key={log.id}>
-                                    <div className="flex gap-2 mb-0.5 text-stone text-[9px]">
-                                        <span>{log.timestamp}</span>
-                                        <span>[{log.type}]</span>
-                                    </div>
-                                    <div className="text-charcoal font-medium leading-tight">{log.message}</div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-
+                            <div className={`max-w-[90%] text-sm ${msg.type === 'user'
+                                ? 'font-serif text-charcoal leading-relaxed'
+                                : 'font-mono text-slate leading-tight bg-slate/5 p-2 rounded-sm border-l-2 border-cinnabar'}`}>
+                                {msg.content}
+                            </div>
+                        </div>
+                    ))
+                )}
+                <div ref={bottomRef} />
             </div>
 
-            {/* Footer */}
-            <div className="p-2 border-t border-charcoal/10 bg-charcoal/5 font-mono text-[9px] text-stone flex justify-between">
-                <span>X: 0000</span>
-                <span>Y: 0000</span>
-                <span>Z: 0000</span>
+            {/* Input Area - Floats at bottom */}
+            <div className="p-4 border-t border-white/20 bg-white/40 backdrop-blur-md">
+                <div className="relative flex items-center">
+                    <input
+                        type="text"
+                        placeholder="Enter Directorial Note..."
+                        className="w-full bg-transparent border-b border-charcoal/20 pb-2 text-sm font-serif text-charcoal placeholder:text-stone focus:outline-none focus:border-cinnabar transition-colors"
+                        onKeyDown={handleKeyDown}
+                    />
+                    <button
+                        className="absolute right-0 bottom-2 text-[10px] font-bold text-cinnabar hover:text-orange transition-colors uppercase tracking-widest flex items-center gap-1 group"
+                        onClick={(e) => {
+                            const input = e.currentTarget.parentElement?.querySelector('input');
+                            if (input?.value.trim()) {
+                                onSendDirective?.(input.value);
+                                input.value = '';
+                            }
+                        }}
+                    >
+                        EXECUTE
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                </div>
             </div>
         </aside>
     );

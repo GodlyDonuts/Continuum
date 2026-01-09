@@ -15,6 +15,11 @@
     @apply bg-cardstock border border-charcoal/10 shadow-none;
   }
 
+  /* Satin-Finish Glass */
+  .glass-satin {
+    @apply bg-white/40 backdrop-blur-[25px] border-l border-white/50 shadow-sm;
+  }
+
   .text-gradient {
     /* Keeping text simple and sharp for industrial look, removed gradient */
     @apply text-charcoal;

@@ -11,6 +11,8 @@ export default {
         charcoal: '#1A1A1A',
         stone: '#A1A1A1',
         orange: '#FF4F00',
+        cinnabar: '#E11D48',
+        slate: '#475569',
       },
       fontFamily: {
         sans: ['Geist Sans', 'Inter', 'sans-serif'],

@@ -1,41 +1,106 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from '../components/Sidebar';
 import Stage from '../components/Stage';
 import Timeline from '../components/Timeline';
 import Inspector from '../components/Inspector';
-import { RefactorAlert } from '../components/wow/RefactorAlert';
-import type { Anchor, EnvState, LogEntry, SequenceNode, TimelineEvent, AgentStatus } from '../types';
+
+import type { Anchor, Directive } from '../types';
 
 const DashboardLayout = () => {
-    // REAL App State - Currently Empty (Idle State)
-    const [anchors] = useState<Anchor[]>([]);
-    const [envState] = useState<EnvState[]>([]);
-    const [logs] = useState<LogEntry[]>([]);
-    const [nodes] = useState<SequenceNode[]>([]);
-    const [events] = useState<TimelineEvent[]>([]);
-    const [agents] = useState<AgentStatus[]>([]);
+    // REAL App State
+    const [anchors, setAnchors] = useState<Anchor[]>([]);
+    const [directives, setDirectives] = useState<Directive[]>([]);
+    const [isLive, setIsLive] = useState(false);
 
-    // Alert State - Waiting for real triggers
-    const [refactorActive] = useState(false);
+    // Wow Factors
+    const [activeTarget, setActiveTarget] = useState<{ x: number, y: number } | null>(null);
+
+    // Initial Data Injection (Simulating Ingest)
+    const handleIngest = () => {
+        setIsLive(true);
+        setAnchors([
+            { id: '1', label: 'ELARA VANCE', index: 1, status: 'active' },
+            { id: '2', label: 'SUBJECT 04', index: 2, status: 'inactive' }
+        ]);
+    };
+
+    const handleSendDirective = (text: string) => {
+        // 1. Add User Directive
+        const newDirective: Directive = {
+            id: Date.now().toString(),
+            type: 'user',
+            content: text,
+            timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })
+        };
+        setDirectives(prev => [...prev, newDirective]);
+
+        // 2. Trigger "Agentic Connection" (Simulate AI Thinking)
+        setActiveTarget({ x: 50, y: 30 }); // percent coordinates
+
+        // 3. AI Response simulation
+        setTimeout(() => {
+            const aiResponse: Directive = {
+                id: (Date.now() + 1).toString(),
+                type: 'ai',
+                content: `REFACTORING... Adjusting facial vector weights on ELARA_VANCE. Delta: +0.42 intensity.`,
+                timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })
+            };
+            setDirectives(prev => [...prev, aiResponse]);
+            setActiveTarget(null);
+        }, 2000);
+    };
 
     return (
         <div className="flex h-screen w-screen bg-cardstock overflow-hidden text-charcoal font-sans selection:bg-orange/20 relative">
-            <RefactorAlert active={refactorActive} />
 
             {/* 1. Left Sidebar (Fixed) */}
-            <Sidebar anchors={anchors} envState={envState} />
+            <Sidebar anchors={anchors} />
 
             {/* 2. Middle Column (Stage + Timeline) */}
-            <div className="flex-1 flex flex-col relative z-10">
-                <Stage />
-                <Timeline nodes={nodes} events={events} />
+            <div className="flex-1 flex flex-col relative z-0">
+                <Stage
+                    sceneTitle="SCENE 14: ALLEYWAY"
+                    isLive={isLive}
+                    onIngest={handleIngest}
+                />
+                <Timeline />
+
+                {/* Agentic Leader Line Overlay */}
+                <svg className="absolute inset-0 pointer-events-none z-50 overflow-visible">
+                    <AnimatePresence>
+                        {activeTarget && (
+                            <motion.path
+                                d={`M 100% 80% Q 90% 80% ${activeTarget.x}% ${activeTarget.y}%`}
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                animate={{ pathLength: 1, opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.5, ease: "circOut" }}
+                                stroke="#E11D48" // Cinnabar
+                                strokeWidth="2"
+                                fill="none"
+                                strokeDasharray="5,5"
+                            />
+                        )}
+                    </AnimatePresence>
+                    {activeTarget && (
+                        <motion.circle
+                            cx={`${activeTarget.x}%`}
+                            cy={`${activeTarget.y}%`}
+                            r="4"
+                            fill="#E11D48"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                        />
+                    )}
+                </svg>
             </div>
 
-            {/* 3. Right Sidebar (Fixed) */}
-            <Inspector logs={logs} agents={agents} variance={0} />
-
-            {/* Global Background Glow - Removed for Industrial Look */}
-            {/* <div className="absolute inset-0 bg-gradient-radial from-indigo/5 via-transparent to-transparent opacity-40 pointer-events-none z-0" /> */}
+            {/* 3. Right Sidebar (Directives Hub) */}
+            <Inspector
+                directives={directives}
+                onSendDirective={handleSendDirective}
+            />
         </div>
     );
 };

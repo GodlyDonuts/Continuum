@@ -20,6 +20,15 @@ export interface LogEntry {
     agent?: string;
 }
 
+export interface Directive {
+    id: string;
+    type: 'user' | 'ai';
+    content: string;
+    timestamp: string;
+    targetId?: string; // For linking to video
+    status?: 'processing' | 'done';
+}
+
 export interface SequenceNode {
     id: string;
     hashId: string;
@@ -31,6 +40,7 @@ export interface TimelineEvent {
     id: string;
     message: string;
     timestamp: string;
+    type?: 'directive';
 }
 
 export interface AgentStatus {
