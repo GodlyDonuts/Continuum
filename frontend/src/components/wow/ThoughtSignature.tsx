@@ -1,28 +1,23 @@
-import { motion } from 'framer-motion';
-
 export const ThoughtSignature = () => {
     return (
-        <div className="relative group cursor-pointer bg-white px-2 py-1">
-
-            {/* Chronicle Pin */}
-            <motion.div
-                className="w-4 h-4 rounded-full border-2 border-cool-grey bg-white relative z-10 flex items-center justify-center transition-colors group-hover:border-indigo-500"
-                whileHover={{ scale: 1.2 }}
-            >
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </motion.div>
-
-            {/* Tooltip - Scientific Tag */}
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
-                <div className="bg-gray-900 text-white px-3 py-1.5 rounded shadow-xl text-[10px] whitespace-nowrap font-mono flex flex-col items-center">
-                    <span className="text-gray-400 text-[8px] uppercase tracking-wider">Logic Node</span>
-                    <span>#AF-22-SIG</span>
-                    <div className="w-2 h-2 bg-gray-900 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
-                </div>
+        <div className="relative group cursor-pointer">
+            {/* Hexagonal Node */}
+            <div className="w-5 h-5 bg-cardstock border border-charcoal/40 flex items-center justify-center transform rotate-45 group-hover:bg-charcoal group-hover:border-charcoal transition-colors duration-0">
+                <div className="w-2 h-2 bg-stone transform -rotate-45 group-hover:bg-orange transition-colors duration-0"></div>
             </div>
 
-            {/* Hover Vertical Line */}
-            <div className="absolute top-full left-1/2 w-[1px] h-8 bg-indigo-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {/* Connector Line - Solid Sharp */}
+            <div className="absolute top-1/2 left-5 w-4 h-[1px] bg-charcoal/20 z-0"></div>
+
+            {/* Tooltip - Strict Data Block */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 hidden group-hover:block z-30">
+                <div className="bg-charcoal text-cardstock px-2 py-1 shadow-none">
+                    <div className="text-[8px] font-mono tracking-widest text-stone uppercase">Hash ID</div>
+                    <div className="text-[10px] font-mono font-bold text-orange">0x4F2A</div>
+                </div>
+                {/* Connector to tooltip */}
+                <div className="w-[1px] h-3 bg-charcoal mx-auto"></div>
+            </div>
         </div>
     );
 };

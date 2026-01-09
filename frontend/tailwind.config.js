@@ -7,16 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        gallery: '#FAFAFA',
-        paper: '#FFFFFF',
-        'cool-grey': '#E2E8F0',
-        'brand-indigo': '#6366F1',
-        'brand-amber': '#F59E0B',
+        cardstock: '#EFEEEB',
+        charcoal: '#1A1A1A',
+        stone: '#A1A1A1',
+        orange: '#FF4F00',
       },
       fontFamily: {
         sans: ['Geist Sans', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
         serif: ['Newsreader', 'serif'],
+      },
+      borderRadius: {
+        DEFAULT: '2px',
+        sm: '1px',
+        md: '2px',
+        lg: '2px',
+        xl: '2px',
+        '2xl': '2px',
+        full: '9999px',
       },
     },
   },

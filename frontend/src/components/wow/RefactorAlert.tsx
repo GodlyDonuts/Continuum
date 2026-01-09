@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 interface RefactorAlertProps {
     active: boolean;
@@ -9,35 +9,43 @@ export const RefactorAlert = ({ active }: RefactorAlertProps) => {
     return (
         <AnimatePresence>
             {active && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center bg-white/50 backdrop-blur-[2px]"
-                >
-                    {/* Amber Pulse Border - Edge of Screen */}
-                    <div className="absolute inset-0 border-[6px] border-amber-400/30 animate-pulse" />
+                <div className="absolute inset-0 pointer-events-none z-50 flex items-start justify-center pt-24 bg-charcoal/10 backdrop-blur-[1px]">
 
-                    {/* Central Alert Badge - High Contrast */}
+                    {/* Industrial Warning Card - High Contrast Orange */}
                     <motion.div
-                        initial={{ y: -20, opacity: 0, scale: 0.9 }}
-                        animate={{ y: 0, opacity: 1, scale: 1 }}
-                        className="bg-white border border-amber-200 px-8 py-4 rounded-2xl flex items-center gap-4 shadow-[0_20px_50px_rgba(245,158,11,0.15)] ring-4 ring-amber-50"
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -20, opacity: 0 }}
+                        transition={{ duration: 0.1 }}
+                        className="bg-orange w-full max-w-lg shadow-none border border-black/20"
                     >
-                        <div className="bg-amber-100 p-2 rounded-full">
-                            <AlertCircle className="w-6 h-6 text-amber-600" />
+                        <div className="flex items-stretch">
+                            {/* Icon Section */}
+                            <div className="bg-black/10 px-4 flex items-center justify-center border-r border-black/10">
+                                <AlertTriangle className="w-6 h-6 text-white" strokeWidth={2.5} />
+                            </div>
+
+                            {/* Content Section */}
+                            <div className="p-3 flex-1 flex justify-between items-center text-white">
+                                <div>
+                                    <div className="font-bold tracking-tight uppercase text-sm">Continuity Variance Detected</div>
+                                    <div className="font-mono text-[10px] opacity-80 mt-0.5">ERR_CODE: 0x99_VAR // REFACTORING SEQUENCE INIT</div>
+                                </div>
+                                <div className="text-2xl font-mono font-bold opacity-20">!!!</div>
+                            </div>
                         </div>
 
-                        <div className="flex flex-col">
-                            <span className="font-sans font-bold text-gray-900 tracking-tight text-lg">
-                                Continuity Break Detected
-                            </span>
-                            <span className="font-mono text-amber-600 text-xs tracking-wide">
-                                INITIATING REFACTOR SEQUENCE...
-                            </span>
+                        {/* Progress Bar */}
+                        <div className="h-1 bg-black/20 w-full">
+                            <motion.div
+                                className="h-full bg-white"
+                                initial={{ width: "0%" }}
+                                animate={{ width: "100%" }}
+                                transition={{ duration: 2.5, ease: "linear" }}
+                            />
                         </div>
                     </motion.div>
-                </motion.div>
+                </div>
             )}
         </AnimatePresence>
     );
