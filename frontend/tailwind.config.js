@@ -7,14 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        obsidian: '#0A0A0B',
-        charcoal: '#161618',
-        cobalt: '#4285F4',
-        violet: '#9333EA',
+        gallery: '#FAFAFA',
+        paper: '#FFFFFF',
+        'cool-grey': '#E2E8F0',
+        'brand-indigo': '#6366F1',
+        'brand-amber': '#F59E0B',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['Geist Sans', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        serif: ['Newsreader', 'serif'],
       },
     },
   },

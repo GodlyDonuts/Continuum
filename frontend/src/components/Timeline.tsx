@@ -2,25 +2,35 @@ import { ThoughtSignature } from './wow/ThoughtSignature';
 
 const Timeline = () => {
     return (
-        <div className="h-48 glass border-t border-white/10 relative z-20 flex flex-col">
-            <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
-                <div className="h-full w-1/3 bg-gradient-to-r from-cobalt to-violet" />
+        <div className="h-56 bg-white border-t border-cool-grey relative z-20 flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+            {/* Processing Shimmer Line */}
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-400 to-transparent opacity-30" />
+
+            {/* Header */}
+            <div className="px-6 py-3 border-b border-cool-grey/30 flex items-center justify-between">
+                <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">Director's Loop // Sequence 01</span>
+                <div className="flex gap-4">
+                    <div className="text-[10px] font-mono text-gray-400">Total Duration: <span className="text-gray-900">14s</span></div>
+                    <div className="text-[10px] font-mono text-gray-400">Nodes: <span className="text-gray-900">12</span></div>
+                </div>
             </div>
 
-            <div className="flex-1 flex items-center px-8 gap-8 overflow-x-auto">
-                <div className="text-xs font-mono text-gray-500 min-w-[100px]">SEQ_01</div>
-                {/* Render a few nodes */}
-                <div className="flex items-center gap-16">
+            <div className="flex-1 flex items-center px-12 gap-12 overflow-x-auto relative">
+                {/* Connecting Line (Dashed) */}
+                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px] border-t border-dashed border-cool-grey z-0" />
+
+                <div className="text-xs font-mono text-gray-400 min-w-[60px] relative z-10 bg-white px-2">START</div>
+
+                {/* Render Nodes */}
+                <div className="flex items-center gap-24 relative z-10">
                     <ThoughtSignature />
                     <ThoughtSignature />
                     <ThoughtSignature />
                     <ThoughtSignature />
                     <ThoughtSignature />
                 </div>
-            </div>
 
-            <div className="p-2 border-t border-white/5 text-center text-[10px] text-gray-600 font-mono tracking-widest">
-                [DIRECTOR'S LOOP TIMELINE - SEQUENCE 01]
+                <div className="text-xs font-mono text-gray-400 min-w-[60px] relative z-10 bg-white px-2">END</div>
             </div>
         </div>
     );

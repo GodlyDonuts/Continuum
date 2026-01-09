@@ -2,22 +2,27 @@ import { motion } from 'framer-motion';
 
 export const ThoughtSignature = () => {
     return (
-        <div className="relative group cursor-pointer">
-            {/* Visual Thread */}
-            <div className="absolute top-1/2 -left-full w-full h-[1px] bg-gradient-to-r from-transparent to-cobalt opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="relative group cursor-pointer bg-white px-2 py-1">
 
-            {/* Core Node */}
+            {/* Chronicle Pin */}
             <motion.div
-                className="w-3 h-3 rounded-full bg-cobalt shadow-[0_0_10px_rgba(66,133,244,0.5)] border border-white/20 relative z-10"
-                whileHover={{ scale: 1.5, borderColor: '#fff' }}
+                className="w-4 h-4 rounded-full border-2 border-cool-grey bg-white relative z-10 flex items-center justify-center transition-colors group-hover:border-indigo-500"
+                whileHover={{ scale: 1.2 }}
             >
-                <div className="absolute inset-0 rounded-full bg-cobalt animate-ping opacity-75" />
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.div>
 
-            {/* Tooltip logic could go here */}
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-charcoal border border-white/10 px-2 py-1 rounded text-[10px] whitespace-nowrap z-20 pointer-events-none">
-                Logic Node: #AF-22
+            {/* Tooltip - Scientific Tag */}
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-30">
+                <div className="bg-gray-900 text-white px-3 py-1.5 rounded shadow-xl text-[10px] whitespace-nowrap font-mono flex flex-col items-center">
+                    <span className="text-gray-400 text-[8px] uppercase tracking-wider">Logic Node</span>
+                    <span>#AF-22-SIG</span>
+                    <div className="w-2 h-2 bg-gray-900 rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
+                </div>
             </div>
+
+            {/* Hover Vertical Line */}
+            <div className="absolute top-full left-1/2 w-[1px] h-8 bg-indigo-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
     );
 };

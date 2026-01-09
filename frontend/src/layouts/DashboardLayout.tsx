@@ -19,7 +19,7 @@ const DashboardLayout = () => {
     }, []);
 
     return (
-        <div className="flex h-screen w-screen bg-obsidian overflow-hidden text-white font-sans selection:bg-cobalt/30 relative">
+        <div className="flex h-screen w-screen bg-gallery overflow-hidden text-gray-900 font-sans selection:bg-indigo/10 relative">
             <RefactorAlert active={refactorActive} />
 
             {/* 1. Left Sidebar (Fixed) */}
@@ -34,8 +34,8 @@ const DashboardLayout = () => {
             {/* 3. Right Sidebar (Fixed) */}
             <Inspector />
 
-            {/* Global Background Glow */}
-            <div className="absolute inset-0 bg-gradient-radial from-cobalt/5 via-transparent to-transparent opacity-50 pointer-events-none z-0" />
+            {/* Global Background Glow - Subtle Light Mode Lift */}
+            <div className="absolute inset-0 bg-gradient-radial from-indigo/5 via-transparent to-transparent opacity-40 pointer-events-none z-0" />
         </div>
     );
 };
