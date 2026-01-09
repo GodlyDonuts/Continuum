@@ -1,11 +1,13 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 
 interface RefactorAlertProps {
     active: boolean;
+    message?: string;
+    code?: string;
 }
 
-export const RefactorAlert = ({ active }: RefactorAlertProps) => {
+export const RefactorAlert = ({ active, message = "Continuity Variance Detected", code = "ERR_CODE: 0x00_NULL" }: RefactorAlertProps) => {
     return (
         <AnimatePresence>
             {active && (
@@ -28,8 +30,8 @@ export const RefactorAlert = ({ active }: RefactorAlertProps) => {
                             {/* Content Section */}
                             <div className="p-3 flex-1 flex justify-between items-center text-white">
                                 <div>
-                                    <div className="font-bold tracking-tight uppercase text-sm">Continuity Variance Detected</div>
-                                    <div className="font-mono text-[10px] opacity-80 mt-0.5">ERR_CODE: 0x99_VAR // REFACTORING SEQUENCE INIT</div>
+                                    <div className="font-bold tracking-tight uppercase text-sm">{message}</div>
+                                    <div className="font-mono text-[10px] opacity-80 mt-0.5">{code}</div>
                                 </div>
                                 <div className="text-2xl font-mono font-bold opacity-20">!!!</div>
                             </div>
