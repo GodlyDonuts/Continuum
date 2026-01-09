@@ -13,6 +13,7 @@ export default {
         orange: '#FF4F00',
         cinnabar: '#E11D48',
         slate: '#475569',
+        'optic-cyan': '#00E5FF',
       },
       fontFamily: {
         sans: ['Geist Sans', 'Inter', 'sans-serif'],

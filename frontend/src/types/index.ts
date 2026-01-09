@@ -20,13 +20,21 @@ export interface LogEntry {
     agent?: string;
 }
 
+export interface AgentStep {
+    id: string;
+    agent: string;
+    action: string;
+    status: 'pending' | 'active' | 'complete';
+    confidence?: number;
+}
+
 export interface Directive {
     id: string;
     type: 'user' | 'ai';
-    content: string;
+    content?: string; // For user messages
+    steps?: AgentStep[]; // For AI multi-agent responses
     timestamp: string;
-    targetId?: string; // For linking to video
-    status?: 'processing' | 'done';
+    targetId?: string;
 }
 
 export interface SequenceNode {

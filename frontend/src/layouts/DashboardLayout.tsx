@@ -35,20 +35,35 @@ const DashboardLayout = () => {
         };
         setDirectives(prev => [...prev, newDirective]);
 
-        // 2. Trigger "Agentic Connection" (Simulate AI Thinking)
-        setActiveTarget({ x: 50, y: 30 }); // percent coordinates
+        // 2. Trigger "Agentic Connection"
+        setActiveTarget({ x: 50, y: 30 });
 
-        // 3. AI Response simulation
+        // 3. AI Response simulation (Multi-Agent Handoff)
         setTimeout(() => {
             const aiResponse: Directive = {
                 id: (Date.now() + 1).toString(),
                 type: 'ai',
-                content: `REFACTORING... Adjusting facial vector weights on ELARA_VANCE. Delta: +0.42 intensity.`,
-                timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })
+                timestamp: new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" }),
+                steps: [
+                    {
+                        id: 's1',
+                        agent: 'GEMINI_3_PRO',
+                        action: 'Reasoning: Analyzing facial topology for emotional variance...',
+                        status: 'complete',
+                        confidence: 0.98
+                    },
+                    {
+                        id: 's2',
+                        agent: 'NANO_BANANA_PRO',
+                        action: 'Executing: Masking frame 142–180. Adjusting vector weights +0.42.',
+                        status: 'active',
+                        confidence: 0.85
+                    }
+                ]
             };
             setDirectives(prev => [...prev, aiResponse]);
             setActiveTarget(null);
-        }, 2000);
+        }, 1500);
     };
 
     return (

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
+
 import type { Directive } from '../types';
 
 interface InspectorProps {
@@ -22,19 +23,19 @@ const Inspector = ({ directives = [], onSendDirective }: InspectorProps) => {
     };
 
     return (
-        <aside className="w-96 h-full glass-satin border-l border-white/40 flex flex-col z-20 shadow-2xl relative">
+        <aside className="w-96 h-full glass-satin border-l border-white/50 flex flex-col z-20 shadow-2xl relative">
             <div className="p-4 border-b border-white/20 flex items-center justify-between">
                 <h3 className="font-sans font-bold tracking-widest uppercase text-charcoal/80 flex items-center gap-2 text-xs">
                     <Sparkles className="w-3 h-3 text-cinnabar" />
                     Directorial Log
                 </h3>
                 <span className="px-1.5 py-0.5 font-bold text-[9px] bg-slate/10 text-slate rounded-sm uppercase tracking-wider">
-                    Collaboration Active
+                    Multi-Agent Active
                 </span>
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-6">
+            <div className="flex-1 p-4 overflow-y-auto space-y-8">
                 {directives.length === 0 ? (
                     <div className="flex h-full flex-col items-center justify-center opacity-40 text-center">
                         <div className="w-16 h-[1px] bg-charcoal/20 mb-4"></div>
@@ -43,17 +44,46 @@ const Inspector = ({ directives = [], onSendDirective }: InspectorProps) => {
                 ) : (
                     directives.map((msg) => (
                         <div key={msg.id} className={`flex flex-col ${msg.type === 'user' ? 'items-end' : 'items-start'}`}>
-                            <div className="flex items-center gap-2 mb-1">
+
+                            {/* Header */}
+                            <div className="flex items-center gap-2 mb-1.5 opacity-60">
+                                {msg.type === 'ai' && <div className="w-1.5 h-1.5 bg-optic-cyan rounded-full animate-pulse"></div>}
                                 <span className="text-[9px] font-mono text-slate uppercase tracking-wider">
-                                    {msg.type === 'user' ? 'DIRECTIVE' : 'REFACTORING'}
+                                    {msg.type === 'user' ? 'DIRECTOR' : 'INTELLIGENCE HANDOFF'}
                                 </span>
                                 <span className="text-[9px] font-mono text-slate/50">{msg.timestamp}</span>
                             </div>
 
-                            <div className={`max-w-[90%] text-sm ${msg.type === 'user'
-                                ? 'font-serif text-charcoal leading-relaxed'
-                                : 'font-mono text-slate leading-tight bg-slate/5 p-2 rounded-sm border-l-2 border-cinnabar'}`}>
-                                {msg.content}
+                            {/* Content */}
+                            <div className={`max-w-[95%] text-sm ${msg.type === 'user'
+                                ? 'font-serif text-charcoal leading-relaxed text-right'
+                                : 'font-mono text-slate leading-tight w-full'}`}>
+
+                                {msg.type === 'user' ? (
+                                    msg.content
+                                ) : (
+                                    <div className="space-y-2 bg-white/40 p-3 rounded-sm border border-white/40 shadow-sm">
+                                        {msg.steps?.map((step) => (
+                                            <div key={step.id} className="flex gap-3 items-start group">
+                                                <div className={`w-0.5 h-full min-h-[12px] mt-1 ${step.agent === 'GEMINI_3_PRO' ? 'bg-optic-cyan' : 'bg-cinnabar'}`}></div>
+                                                <div className="flex-1">
+                                                    <div className="flex justify-between items-center mb-0.5">
+                                                        <span className={`text-[9px] font-bold ${step.agent === 'GEMINI_3_PRO' ? 'text-slate' : 'text-cinnabar'}`}>
+                                                            {step.agent}
+                                                        </span>
+                                                        {step.confidence && (
+                                                            <div className="flex items-center gap-1" title="Confidence Score">
+                                                                <div className={`w-1.5 h-1.5 rounded-full ${step.confidence > 0.8 ? 'bg-green-500' : 'bg-amber-500'}`}></div>
+                                                                <span className="text-[8px] opacity-50">{Math.round(step.confidence * 100)}%</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-xs text-charcoal/90">{step.action}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))
@@ -61,7 +91,7 @@ const Inspector = ({ directives = [], onSendDirective }: InspectorProps) => {
                 <div ref={bottomRef} />
             </div>
 
-            {/* Input Area - Floats at bottom */}
+            {/* Input Area */}
             <div className="p-4 border-t border-white/20 bg-white/40 backdrop-blur-md">
                 <div className="relative flex items-center">
                     <input
