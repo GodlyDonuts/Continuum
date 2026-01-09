@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import StudioStage from '../components/StudioStage';
 import StudioDirector from '../components/StudioDirector';
 import type { Directive } from '../types';
@@ -6,10 +6,35 @@ import type { Directive } from '../types';
 const DashboardLayout = () => {
     const [isLive, setIsLive] = useState(false);
     const [directives, setDirectives] = useState<Directive[]>([]);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Splitter Logic
+    const [leftWidth, setLeftWidth] = useState(50); // percentage
+    const splitRef = useRef<HTMLDivElement>(null);
+
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        const startX = e.clientX;
+        const startWidth = leftWidth;
+
+        const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
+            const newWidth = startWidth + ((mouseMoveEvent.clientX - startX) / window.innerWidth) * 100;
+            // Constrain between 20% and 80%
+            setLeftWidth(Math.min(Math.max(newWidth, 20), 80));
+        };
+
+        const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    }, [leftWidth]);
 
     const handleIngest = () => {
         setIsLive(true);
-        // Add initial context/greeting from AI
+        setIsProcessing(true);
         setTimeout(() => {
             setDirectives([
                 {
@@ -21,10 +46,12 @@ const DashboardLayout = () => {
                     ]
                 }
             ]);
+            setIsProcessing(false);
         }, 800);
     };
 
     const handleSendDirective = (text: string) => {
+        setIsProcessing(true);
         // 1. Add User Message
         const userMsg: Directive = {
             id: Date.now().toString(),
@@ -34,7 +61,7 @@ const DashboardLayout = () => {
         };
         setDirectives(prev => [...prev, userMsg]);
 
-        // 2. Simulate AI Response (Simplified)
+        // 2. Simulate AI Response with Metadata Tags
         setTimeout(() => {
             const aiMsg: Directive = {
                 id: (Date.now() + 1).toString(),
@@ -44,32 +71,46 @@ const DashboardLayout = () => {
                     {
                         id: 's1',
                         agent: 'GEMINI_3_PRO',
-                        action: `Understood. Analyzing "${text}" for scene context...`,
+                        action: `Approaching context: "${text}". [PERSISTED: SCENE_01_CTX]`,
                         status: 'complete'
                     },
                     {
                         id: 's2',
                         agent: 'NANO_BANANA_PRO',
-                        action: 'Adjusting scene parameters. Rendering update...',
+                        action: 'Refactoring composition. [ANCHOR: ELARA_VANCE]',
                         status: 'active'
                     }
                 ]
             };
             setDirectives(prev => [...prev, aiMsg]);
-        }, 1000);
+            setIsProcessing(false);
+        }, 1500);
     };
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-gallery-white font-sans text-black">
+        <div className="flex h-screen w-screen overflow-hidden bg-gallery-white font-sans text-black select-none">
 
-            {/* Left Pane: The Stage (50%) */}
-            <div className="w-1/2 h-full border-r border-gray-200">
+            {/* Left Pane: The Stage */}
+            <div style={{ width: `${leftWidth}%` }} className="h-full relative z-10">
                 <StudioStage isLive={isLive} onIngest={handleIngest} />
             </div>
 
-            {/* Right Pane: The Director (50%) */}
-            <div className="w-1/2 h-full">
-                <StudioDirector directives={directives} onSend={handleSendDirective} />
+            {/* Draggable Divider with Shimmer */}
+            <div
+                ref={splitRef}
+                className={`w-[1px] h-full bg-[#EDEDED] cursor-col-resize hover:bg-international-orange/50 transition-colors relative z-20 flex flex-col justify-center items-center group ${isProcessing ? 'shimmer-loader' : ''}`}
+                onMouseDown={handleMouseDown}
+            >
+                {/* Hit area for easier grabbing */}
+                <div className="absolute inset-y-0 -left-2 -right-2 bg-transparent z-30"></div>
+
+                {/* Visual handle */}
+                <div className="w-1 h-8 bg-gray-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+
+            {/* Right Pane: The Director */}
+            <div style={{ width: `${100 - leftWidth}%` }} className="h-full relative z-10">
+                <StudioDirector directives={directives} onSend={handleSendDirective} isProcessing={isProcessing} />
             </div>
 
         </div>

@@ -12,14 +12,15 @@ const StudioStage = ({ isLive, onIngest }: StudioStageProps) => {
     const [headerHovered, setHeaderHovered] = useState(false);
 
     return (
-        <div className="h-full w-full bg-black relative overflow-hidden group">
-            <AnimatePresence>
+        <div className="h-full w-full bg-black relative overflow-hidden group film-grain">
+            <AnimatePresence mode="wait">
                 {!isLive ? (
                     <motion.div
+                        key="empty"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col items-center justify-center bg-gallery-white text-black"
+                        className="absolute inset-0 flex flex-col items-center justify-center bg-gallery-white text-black z-20"
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => {
                             e.preventDefault();
@@ -33,27 +34,34 @@ const StudioStage = ({ isLive, onIngest }: StudioStageProps) => {
                     </motion.div>
                 ) : (
                     <motion.div
+                        key="live"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="absolute inset-0 flex items-center justify-center bg-black"
+                        className="absolute inset-0 flex items-center justify-center bg-black z-10"
                         onMouseEnter={() => setHeaderHovered(true)}
                         onMouseLeave={() => setHeaderHovered(false)}
                     >
-                        {/* Video Placeholder */}
-                        <img
-                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop"
-                            className="w-full h-full object-cover opacity-90"
-                            alt="Studio Output"
-                        />
+                        {/* Anamorphic Container 2.39:1 */}
+                        <div className="w-full relative aspect-[2.39/1] max-w-6xl mx-auto bg-black overflow-hidden shadow-2xl ring-1 ring-white/5">
+                            {/* Video Placeholder */}
+                            <img
+                                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop"
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${isPlaying ? 'opacity-90' : 'opacity-60'}`}
+                                alt="Studio Output"
+                            />
 
-                        {/* Status Overlay */}
-                        <div className="absolute top-6 right-6 flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-international-orange animate-pulse"></div>
-                            <span className="text-[10px] font-bold tracking-widest text-white uppercase shadow-sm">Live Production</span>
+                            {/* Grain Overlay specific to video */}
+                            <div className="absolute inset-0 film-grain mix-blend-overlay opacity-30 pointer-events-none"></div>
+
+                            {/* Status Overlay */}
+                            <div className="absolute top-6 right-6 flex items-center gap-2 z-30">
+                                <div className="w-1.5 h-1.5 rounded-full bg-international-orange animate-pulse"></div>
+                                <span className="text-[9px] font-bold tracking-widest text-white uppercase shadow-sm">Live Production</span>
+                            </div>
                         </div>
 
                         {/* Floating Controls (Hover Only) */}
-                        <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 transition-all duration-300 ${headerHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 transition-all duration-300 z-30 ${headerHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                             <button className="text-white hover:text-international-orange transition-colors" onClick={() => setIsPlaying(!isPlaying)}>
                                 {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
                             </button>
